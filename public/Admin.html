@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EASY MATHS Admin</title>
+  <script src="/config.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+    body{background:#f4f5f9;color:#222}
+    #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .login-box{width:100%;max-width:400px;background:white;padding:35px;border-radius:15px;box-shadow:0 5px 25px #00000012}
+    .login-box h2{color:#b5121b;text-align:center;margin-bottom:25px}
+    .login-box input{width:100%;padding:14px;margin-bottom:15px;border:1px solid #ddd;border-radius:8px;font-size:15px}
+    .login-box button{width:100%;padding:14px;background:#b5121b;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:bold}
+    #loginMessage{color:#b5121b;margin-top:15px;text-align:center;font-size:14px}
+    #adminPanel{display:none}
+    .sidebar{width:250px;height:100vh;background:#b5121b;color:white;position:fixed;padding:25px 15px;overflow-y:auto}
+    .logo{font-size:23px;font-weight:bold;text-align:center;margin-bottom:30px}
+    .menu button{width:100%;padding:13px;margin-bottom:8px;border:none;border-radius:8px;background:transparent;color:white;text-align:left;font-size:14px;cursor:pointer}
+    .menu button:hover,.menu button.active{background:white;color:#b5121b}
+    .menu-label{font-size:11px;opacity:.7;margin:18px 10px 8px;text-transform:uppercase;letter-spacing:1px}
+    .logout-btn{margin-top:20px;background:#8d0d15!important}
+    .main{margin-left:250px;padding:30px}
+    .topbar{background:white;padding:20px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 3px 15px #00000008}
+    .topbar h2{color:#b5121b}
+    .admin-tag{background:#ffe5e7;color:#b5121b;padding:9px 16px;border-radius:20px;font-weight:bold}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:25px}
+    .card{background:white;padding:25px;border-radius:12px;box-shadow:0 3px 15px #00000008}
+    .card h3{color:#777;font-size:14px}
+    .card h1{color:#b5121b;margin-top:15px;font-size:30px}
+    .section{background:white;padding:25px;border-radius:12px;margin-top:25px;min-height:180px}
+    .section h2{color:#b5121b;margin-bottom:18px}
+    .page{display:none}
+    .page.active-page{display:block}
+    .table-wrap{width:100%;overflow-x:auto}
+    table{width:100%;border-collapse:collapse;min-width:650px}
+    th,td{padding:13px;border-bottom:1px solid #eee;text-align:left;font-size:14px}
+    th{color:#b5121b;background:#fff5f5}
+    .action-btn{border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin:3px;font-weight:bold}
+    .approve,.edit{background:#d9f8e3;color:#137333}
+    .reject,.delete{background:#ffe1e1;color:#b5121b}
+    .lock{background:#333;color:white}
+    .unlock{background:#d9f8e3;color:#137333}
+    .status{display:inline-block;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:bold}
+    .status-approved,.status-active{background:#d9f8e3;color:#137333}
+    .status-pending,.status-locked{background:#fff0cf;color:#956000}
+    .status-rejected{background:#ffe1e1;color:#b5121b}
+    .refresh-btn,.primary-btn{background:#b5121b;color:white;border:none;padding:11px 16px;border-radius:7px;cursor:pointer;margin:0 5px 15px 0;font-weight:bold}
+    .empty{color:#888;padding:20px 0}
+    #loading{color:#b5121b;margin-top:15px}
+    .content-form{background:#fff8f8;border:1px solid #f2d5d7;padding:20px;border-radius:10px;margin-bottom:25px}
+    .content-form h3{color:#b5121b;margin-bottom:15px}
+    .content-form input,.content-form textarea,.content-form select{width:100%;padding:12px;margin-bottom:12px;border:1px solid #ddd;border-radius:7px;font-size:14px;background:white}
+    .content-form textarea{min-height:85px;resize:vertical}
+    .content-form input[type=file]{background:white}
+    .content-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:15px}
+    .content-item{border:1px solid #eee;border-radius:10px;padding:17px;background:#fff}
+    .content-item h3{color:#b5121b;margin-bottom:8px;overflow-wrap:anywhere}
+    .content-item p{color:#666;font-size:13px;line-height:1.5;margin-bottom:12px;overflow-wrap:anywhere}
+    .content-item .item-link{font-size:12px;color:#777;overflow-wrap:anywhere;margin-bottom:12px}
+    .form-message{font-size:13px;margin:5px 0 12px;color:#b5121b}
+    .small-note{font-size:12px;color:#777;margin-bottom:12px}
+    .student-actions{display:flex;gap:5px;flex-wrap:wrap;min-width:220px}
+    .password-btn{background:#fff0cf;color:#956000}
+    .student-modal{display:none;position:fixed;inset:0;background:#0009;z-index:9999;align-items:center;justify-content:center;padding:20px}
+    .student-modal-box{background:white;width:100%;max-width:400px;padding:25px;border-radius:12px}
+    .student-modal-box h2{color:#b5121b;margin-bottom:18px}
+    .student-modal-box input{width:100%;padding:13px;margin-bottom:12px;border:1px solid #ddd;border-radius:7px;font-size:14px}
+    .modal-buttons{display:flex;gap:8px;margin-top:10px}
+    .modal-buttons button{flex:1}
+    .cancel-btn{background:#eee;color:#333;border:none;padding:11px;border-radius:7px;cursor:pointer}
+    @media(max-width:700px){
+      .sidebar{width:100%;height:auto;position:relative}
+      .main{margin-left:0;padding:15px}
+      .cards{grid-template-columns:1fr}
+      .menu{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+      .logo{margin-bottom:20px}
+      .topbar{gap:10px}
+      .topbar h2{font-size:18px}
+      .menu-label{grid-column:1/-1}
+      .section{padding:17px}
+    }
+  </style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <h2>EASY MATHS ADMIN</h2>
+    <input type="text" id="adminUsername" placeholder="Admin Username" autocomplete="username">
+    <input type="password" id="adminPassword" placeholder="Admin Password" autocomplete="current-password">
+    <button id="loginButton" onclick="adminLogin()">LOGIN</button>
+    <p id="loginMessage"></p>
+  </div>
+</div>
+
+<div id="adminPanel">
+  <div class="sidebar">
+    <div class="logo">EASY MATHS</div>
+    <div class="menu">
+      <button class="active" onclick="showPage('dashboard',this)">Dashboard</button>
+      <button onclick="showPage('students',this)">Students</button>
+      <button onclick="showPage('payments',this)">Payment Approval</button>
+      <button onclick="showPage('access',this)">Access Control</button>
+      <div class="menu-label">Learning Content</div>
+      <button onclick="showPage('live',this)">Live Streaming</button>
+      <button onclick="showPage('materials',this)">Study Materials</button>
+      <button onclick="showPage('videos',this)">Video Lessons</button>
+      <button onclick="showPage('classDetails',this)">Class Details</button>
+      <button class="logout-btn" onclick="logoutAdmin()">Logout</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <h2 id="pageTitle">Admin Dashboard</h2>
+      <div class="admin-tag">ADMIN</div>
+    </div>
+
+    <div id="dashboard" class="page active-page">
+      <div class="cards">
+        <div class="card"><h3>Total Students</h3><h1 id="totalStudents">0</h1></div>
+        <div class="card"><h3>Pending Payments</h3><h1 id="pendingPayments">0</h1></div>
+        <div class="card"><h3>Approved Students</h3><h1 id="approvedStudents">0</h1></div>
+      </div>
+      <div class="section">
+        <h2>Welcome, Admin!</h2>
+        <p>Manage students, payments and learning content from here.</p>
+        <p id="loading"></p>
+      </div>
+    </div>
+
+    <div id="students" class="page">
+      <div class="section">
+        <h2>Student Management</h2>
+        <button class="refresh-btn" onclick="loadStudents()">Refresh Students</button>
+        <div class="table-wrap">
+          <table><thead><tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>District</th><th>Grade</th><th>Payment</th><th>Access</th><th>Actions</th></tr></thead><tbody id="studentTable"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div id="payments" class="page">
+      <div class="section">
+        <h2>Payment Approval</h2>
+        <button class="refresh-btn" onclick="loadStudents()">Refresh Payments</button>
+        <div class="table-wrap">
+          <table><thead><tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>Status</th><th>Action</th></tr></thead><tbody id="paymentTable"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div id="access" class="page">
+      <div class="section">
+        <h2>Student Access Control</h2>
+        <button class="refresh-btn" onclick="loadStudents()">Refresh Access</button>
+        <div class="table-wrap">
+          <table><thead><tr><th>Name</th><th>Email</th><th>Payment</th><th>Access</th><th>Action</th></tr></thead><tbody id="accessTable"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div id="live" class="page">
+      <div class="section">
+        <h2>Live Streaming Management</h2>
+        <div class="content-form">
+          <h3 id="liveFormTitle">Add New Live Class</h3>
+          <input id="liveTitle" placeholder="Live Class Title">
+          <textarea id="liveDescription" placeholder="Class Description"></textarea>
+          <input id="liveLink" type="url" placeholder="Zoom or YouTube Link">
+          <select id="liveGrade"><option value="">Select Grade</option><option value="Grade 6">Grade 6</option><option value="Grade 7">Grade 7</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option><option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option><option value="ALL">All Grades</option></select>
+          <p class="small-note">Use a valid HTTPS Zoom or YouTube link.</p>
+          <p class="form-message" id="liveMessage"></p>
+          <button class="primary-btn" onclick="saveLinkContent('live')">Save Live Class</button>
+          <button class="action-btn" onclick="resetContentForm('live')">Clear</button>
+        </div>
+        <button class="refresh-btn" onclick="loadContent('live')">Refresh Live Classes</button>
+        <div class="content-list" id="liveList"></div>
+      </div>
+    </div>
+
+    <div id="materials" class="page">
+      <div class="section">
+        <h2>Study Materials Management</h2>
+        <div class="content-form">
+          <h3>Upload PDF Material</h3>
+          <input id="materialTitle" placeholder="Material Title">
+          <textarea id="materialDescription" placeholder="Material Description"></textarea>
+          <input id="materialFile" type="file" accept="application/pdf,.pdf">
+          <select id="materialGrade"><option value="">Select Grade</option><option value="Grade 6">Grade 6</option><option value="Grade 7">Grade 7</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option><option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option><option value="ALL">All Grades</option></select>
+          <p class="small-note">PDF files only. Maximum file size: 10 MB.</p>
+          <p class="form-message" id="materialMessage"></p>
+          <button class="primary-btn" id="uploadButton" onclick="uploadMaterial()">Upload PDF</button>
+        </div>
+        <button class="refresh-btn" onclick="loadContent('materials')">Refresh Materials</button>
+        <div class="content-list" id="materialsList"></div>
+      </div>
+    </div>
+
+    <div id="videos" class="page">
+      <div class="section">
+        <h2>Video Lessons Management</h2>
+        <div class="content-form">
+          <h3 id="videosFormTitle">Add New Video Lesson</h3>
+          <input id="videosTitle" placeholder="Video Lesson Title">
+          <textarea id="videosDescription" placeholder="Video Description"></textarea>
+          <input id="videosLink" type="url" placeholder="Zoom or YouTube Link">
+          <select id="videosGrade"><option value="">Select Grade</option><option value="Grade 6">Grade 6</option><option value="Grade 7">Grade 7</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option><option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option><option value="Grade 12">Grade 12</option><option value="Grade 13">Grade 13</option><option value="ALL">All Grades</option></select>
+          <p class="small-note">Use a valid HTTPS Zoom or YouTube link.</p>
+          <p class="form-message" id="videosMessage"></p>
+          <button class="primary-btn" onclick="saveLinkContent('videos')">Save Video Lesson</button>
+          <button class="action-btn" onclick="resetContentForm('videos')">Clear</button>
+        </div>
+        <button class="refresh-btn" onclick="loadContent('videos')">Refresh Video Lessons</button>
+        <div class="content-list" id="videosList"></div>
+      </div>
+    </div>
+
+    <div id="classDetails" class="page">
+      <div class="section">
+        <h2>Class Details Management</h2>
+        <div class="content-form">
+          <h3 id="classDetailsFormTitle">Add New Class Details</h3>
+          <input id="classDetailsTitle" placeholder="Class Details Title">
+          <textarea id="classDetailsDescription" placeholder="Class Details Description"></textarea>
+          <input id="classDetailsLink" type="url" placeholder="Optional HTTPS Zoom / YouTube / other class link">
+          <select id="classDetailsGrade"><option value="">Select Grade</option><option value="Grade 6">Grade 6</option><option value="Grade 7">Grade 7</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option><option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option></select>
+          <p class="small-note">Class Details are visible only to logged-in students in the selected grade. Payment approval is not required.</p>
+          <p class="form-message" id="classDetailsMessage"></p>
+          <button class="primary-btn" onclick="saveClassDetails()">Save Class Details</button>
+          <button class="action-btn" onclick="resetClassDetailsForm()">Clear</button>
+        </div>
+        <button class="refresh-btn" onclick="loadContent('classDetails')">Refresh Class Details</button>
+        <div class="content-list" id="classDetailsList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="student-modal" id="passwordModal">
+  <div class="student-modal-box">
+    <h2>Change Student Password</h2>
+    <input type="password" id="newStudentPassword" placeholder="Enter New Password" autocomplete="new-password">
+    <input type="password" id="confirmStudentPassword" placeholder="Confirm New Password" autocomplete="new-password">
+    <p id="passwordMessage" class="form-message"></p>
+    <div class="modal-buttons">
+      <button class="primary-btn" id="changePasswordButton" onclick="saveStudentPassword()">Change Password</button>
+      <button class="cancel-btn" onclick="closePasswordModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let adminToken = '';
+  let studentsData = [];
+  let editingContent = { live: '', videos: '' };
+  let editingClassDetails = '';
+  let selectedStudentId = '';
+
+  const pageNames = {
+    dashboard: 'Admin Dashboard', students: 'Student Management', payments: 'Payment Approval',
+    access: 'Access Control', live: 'Live Streaming', materials: 'Study Materials',
+    videos: 'Video Lessons', classDetails: 'Class Details Management'
+  };
+
+  async function adminLogin() {
+    const username = document.getElementById('adminUsername').value.trim();
+    const password = document.getElementById('adminPassword').value;
+    const message = document.getElementById('loginMessage');
+    const button = document.getElementById('loginButton');
+    if (!username || !password) { message.textContent = 'Enter username and password.'; return; }
+    button.disabled = true; button.textContent = 'PLEASE WAIT...'; message.textContent = '';
+    try {
+      const result = await window.callApi('adminLogin', username, password);
+      button.disabled = false; button.textContent = 'LOGIN';
+      if (result && result.success) {
+        adminToken = result.token;
+        sessionStorage.setItem('easyMathsAdminToken', adminToken);
+        openDashboard();
+      } else {
+        message.textContent = result.message || 'Login failed.';
+      }
+    } catch (error) {
+      button.disabled = false; button.textContent = 'LOGIN';
+      message.textContent = error.message || 'Server error.';
+    }
+  }
+
+  function openDashboard() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    loadStudents();
+  }
+
+  async function checkSavedSession() {
+    const savedToken = sessionStorage.getItem('easyMathsAdminToken');
+    if (!savedToken) return;
+    try {
+      const result = await window.callApi('checkAdminSession', savedToken);
+      if (result && result.success) { adminToken = savedToken; openDashboard(); }
+      else sessionStorage.removeItem('easyMathsAdminToken');
+    } catch (e) { sessionStorage.removeItem('easyMathsAdminToken'); }
+  }
+
+  function showPage(page, button) {
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active-page'); });
+    document.getElementById(page).classList.add('active-page');
+    document.querySelectorAll('.menu button').forEach(function(b) { b.classList.remove('active'); });
+    button.classList.add('active');
+    document.getElementById('pageTitle').textContent = pageNames[page] || 'Admin Dashboard';
+    if (['dashboard', 'students', 'payments', 'access'].includes(page)) loadStudents();
+    else loadContent(page);
+  }
+
+  async function loadStudents() {
+    if (!adminToken) return;
+    document.getElementById('loading').textContent = 'Loading student data...';
+    try {
+      const result = await window.callApi('adminGetStudents', adminToken);
+      if (!result || !result.success) {
+        document.getElementById('loading').textContent = result ? result.message : 'Unable to load students.';
+        return;
+      }
+      studentsData = result.students || [];
+      renderStudents();
+      updateDashboard();
+      document.getElementById('loading').textContent = 'Student data updated successfully.';
+    } catch (error) {
+      document.getElementById('loading').textContent = error.message || 'Unable to load data.';
+    }
+  }
+
+  function updateDashboard() {
+    document.getElementById('totalStudents').textContent = studentsData.length;
+    document.getElementById('pendingPayments').textContent = studentsData.filter(s => s.paymentStatus === 'PENDING').length;
+    document.getElementById('approvedStudents').textContent = studentsData.filter(s => s.paymentStatus === 'APPROVED').length;
+  }
+
+  function statusLabel(status) {
+    const value = String(status || 'PENDING').toUpperCase();
+    let css = 'status-pending';
+    if (value === 'APPROVED') css = 'status-approved';
+    if (value === 'ACTIVE') css = 'status-active';
+    if (value === 'LOCKED') css = 'status-locked';
+    if (value === 'REJECTED') css = 'status-rejected';
+    return '<span class="status ' + css + '">' + escapeHTML(value) + '</span>';
+  }
+
+  function renderStudents() {
+    const studentTable = document.getElementById('studentTable');
+    const paymentTable = document.getElementById('paymentTable');
+    const accessTable = document.getElementById('accessTable');
+    studentTable.innerHTML = ''; paymentTable.innerHTML = ''; accessTable.innerHTML = '';
+
+    if (!studentsData.length) {
+      studentTable.innerHTML = '<tr><td colspan="8" class="empty">No students found.</td></tr>';
+      paymentTable.innerHTML = '<tr><td colspan="5" class="empty">No payment requests found.</td></tr>';
+      accessTable.innerHTML = '<tr><td colspan="5" class="empty">No students found.</td></tr>';
+      return;
+    }
+
+    studentsData.forEach(function(s) {
+      const name = escapeHTML(s.name), email = escapeHTML(s.email), whatsapp = escapeHTML(s.whatsapp);
+      const district = escapeHTML(s.district), grade = escapeHTML(s.grade || 'Not set');
+      const safeUserId = escapeHTML(s.userId);
+
+      studentTable.innerHTML += `
+        <tr>
+          <td>${name}</td><td>${email}</td><td>${whatsapp}</td><td>${district}</td><td>${grade}</td>
+          <td>${statusLabel(s.paymentStatus)}</td><td>${statusLabel(s.accessStatus)}</td>
+          <td><div class="student-actions">
+            <button class="action-btn password-btn" data-action="password" data-user-id="${safeUserId}">Change Password</button>
+            <button class="action-btn delete" data-action="delete" data-user-id="${safeUserId}">Delete</button>
+          </div></td>
+        </tr>`;
+
+      paymentTable.innerHTML += '<tr><td>'+name+'</td><td>'+email+'</td><td>'+whatsapp+'</td><td>'+statusLabel(s.paymentStatus)+'</td><td><button class="action-btn approve" onclick="changePayment('+Number(s.rowNumber)+',\'APPROVED\')">Approve</button><button class="action-btn reject" onclick="changePayment('+Number(s.rowNumber)+',\'REJECTED\')">Reject</button></td></tr>';
+
+      const accessButton = s.accessStatus === 'ACTIVE'
+        ? '<button class="action-btn lock" onclick="changeAccess('+Number(s.rowNumber)+',false)">Disable</button>'
+        : '<button class="action-btn unlock" onclick="changeAccess('+Number(s.rowNumber)+',true)">Enable</button>';
+
+      accessTable.innerHTML += '<tr><td>'+name+'</td><td>'+email+'</td><td>'+statusLabel(s.paymentStatus)+'</td><td>'+statusLabel(s.accessStatus)+'</td><td>'+accessButton+'</td></tr>';
+    });
+
+    studentTable.querySelectorAll('[data-action="password"]').forEach(function(button) {
+      button.addEventListener('click', function() { openPasswordModal(this.dataset.userId); });
+    });
+    studentTable.querySelectorAll('[data-action="delete"]').forEach(function(button) {
+      button.addEventListener('click', function() { deleteStudent(this.dataset.userId); });
+    });
+  }
+
+  async function changePayment(rowNumber, status) {
+    const question = status === 'APPROVED' ? 'Approve this student payment?' : 'Reject this student payment?';
+    if (!confirm(question)) return;
+    try {
+      const result = await window.callApi('adminSetPaymentStatus', adminToken, rowNumber, status);
+      alert(result.message || 'Updated.');
+      if (result.success) loadStudents();
+    } catch (error) { alert(error.message || 'Update failed.'); }
+  }
+
+  async function changeAccess(rowNumber, enabled) {
+    if (!confirm(enabled ? 'Enable access for this student?' : 'Disable access for this student?')) return;
+    try {
+      const result = await window.callApi('adminSetStudentAccess', adminToken, rowNumber, enabled);
+      alert(result.message || 'Updated.');
+      if (result.success) loadStudents();
+    } catch (error) { alert(error.message || 'Update failed.'); }
+  }
+
+  async function loadContent(type) {
+    if (!adminToken) return;
+    const list = document.getElementById(type + 'List');
+    list.innerHTML = '<p class="empty">Loading content...</p>';
+    try {
+      let result;
+      if (type === 'classDetails') result = await window.callApi('adminGetClassDetails', adminToken);
+      else result = await window.callApi('adminGetContent', adminToken, type);
+      if (!result || !result.success) {
+        list.innerHTML = '<p class="empty">' + escapeHTML((result && result.message) || 'Unable to load content.') + '</p>';
+        return;
+      }
+      renderContent(type, result.items || []);
+    } catch (error) {
+      list.innerHTML = '<p class="empty">' + escapeHTML(error.message || 'Unable to load content.') + '</p>';
+    }
+  }
+
+  function renderContent(type, items) {
+    const list = document.getElementById(type + 'List');
+    list.innerHTML = '';
+    if (!items.length) { list.innerHTML = '<p class="empty">No content added yet.</p>'; return; }
+
+    items.forEach(function(item) {
+      const card = document.createElement('div');
+      card.className = 'content-item';
+      const heading = document.createElement('h3'); heading.textContent = item.title || 'Untitled';
+      const description = document.createElement('p'); description.textContent = item.description || 'No description';
+      card.appendChild(heading); card.appendChild(description);
+
+      const gradeInfo = document.createElement('div');
+      gradeInfo.className = 'item-link';
+      gradeInfo.textContent = 'Grade: ' + (item.grade === 'ALL' ? 'All Grades' : (item.grade || 'Not set'));
+      card.appendChild(gradeInfo);
+
+      if (type === 'materials') {
+        const fileInfo = document.createElement('div'); fileInfo.className = 'item-link';
+        fileInfo.textContent = 'PDF: ' + (item.fileName || 'Uploaded PDF');
+        card.appendChild(fileInfo);
+        const editButton = document.createElement('button');
+        editButton.className = 'action-btn edit'; editButton.textContent = 'Edit Details';
+        editButton.onclick = function() { editMaterial(item); };
+        card.appendChild(editButton);
+      } else if (type === 'classDetails') {
+        const linkInfo = document.createElement('div'); linkInfo.className = 'item-link';
+        linkInfo.textContent = item.link || 'No link added';
+        card.appendChild(linkInfo);
+        const editButton = document.createElement('button');
+        editButton.className = 'action-btn edit'; editButton.textContent = 'Edit';
+        editButton.onclick = function() { editClassDetails(item); };
+        card.appendChild(editButton);
+      } else {
+        const linkInfo = document.createElement('div'); linkInfo.className = 'item-link';
+        linkInfo.textContent = item.link || '';
+        card.appendChild(linkInfo);
+        const editButton = document.createElement('button');
+        editButton.className = 'action-btn edit'; editButton.textContent = 'Edit';
+        editButton.onclick = function() { editLinkContent(type, item); };
+        card.appendChild(editButton);
+      }
+
+      const deleteButton = document.createElement('button');
+      deleteButton.className = 'action-btn delete'; deleteButton.textContent = 'Delete';
+      deleteButton.onclick = function() {
+        if (type === 'classDetails') {
+          if (!confirm('Delete these class details?')) return;
+          window.callApi('adminDeleteClassDetails', adminToken, item.id).then(function(result) {
+            alert(result.message || 'Deleted.');
+            if (result.success) loadContent('classDetails');
+          }).catch(function(e) { alert(e.message || 'Delete failed.'); });
+        } else deleteContent(type, item.id);
+      };
+      card.appendChild(deleteButton);
+      list.appendChild(card);
+    });
+  }
+
+  async function saveLinkContent(type) {
+    const title = document.getElementById(type + 'Title').value.trim();
+    const description = document.getElementById(type + 'Description').value.trim();
+    const link = document.getElementById(type + 'Link').value.trim();
+    const message = document.getElementById(type + 'Message');
+    if (!title || !link || !document.getElementById(type + 'Grade').value) {
+      message.textContent = 'Please enter a title, link and select a grade.'; return;
+    }
+    message.textContent = 'Saving...';
+    const data = { id: editingContent[type], title: title, description: description, link: link, grade: document.getElementById(type + 'Grade').value };
+    try {
+      const result = await window.callApi('adminSaveLinkContent', adminToken, type, data);
+      message.textContent = result.message || 'Saved.';
+      if (result.success) { resetContentForm(type); loadContent(type); }
+    } catch (error) { message.textContent = error.message || 'Unable to save.'; }
+  }
+
+  function editLinkContent(type, item) {
+    editingContent[type] = item.id;
+    document.getElementById(type + 'Title').value = item.title || '';
+    document.getElementById(type + 'Description').value = item.description || '';
+    document.getElementById(type + 'Link').value = item.link || '';
+    document.getElementById(type + 'Grade').value = item.grade || 'ALL';
+    document.getElementById(type + 'FormTitle').textContent = 'Edit Content';
+    document.getElementById(type + 'Message').textContent = 'Editing selected item.';
+    document.getElementById(type + 'Title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function resetContentForm(type) {
+    editingContent[type] = '';
+    document.getElementById(type + 'Title').value = '';
+    document.getElementById(type + 'Description').value = '';
+    document.getElementById(type + 'Link').value = '';
+    document.getElementById(type + 'Grade').value = '';
+    document.getElementById(type + 'FormTitle').textContent = type === 'live' ? 'Add New Live Class' : 'Add New Video Lesson';
+    document.getElementById(type + 'Message').textContent = '';
+  }
+
+  function uploadMaterial() {
+    const title = document.getElementById('materialTitle').value.trim();
+    const description = document.getElementById('materialDescription').value.trim();
+    const fileInput = document.getElementById('materialFile');
+    const message = document.getElementById('materialMessage');
+    const button = document.getElementById('uploadButton');
+    const file = fileInput.files[0];
+    if (!title || !file || !document.getElementById('materialGrade').value) {
+      message.textContent = 'Enter a title, choose a PDF file and select a grade.'; return;
+    }
+    if (file.type !== 'application/pdf' || !file.name.toLowerCase().endsWith('.pdf')) {
+      message.textContent = 'Only PDF files are allowed.'; return;
+    }
+    if (file.size > 10 * 1024 * 1024) { message.textContent = 'Maximum file size is 10 MB.'; return; }
+    button.disabled = true; button.textContent = 'UPLOADING...'; message.textContent = 'Reading PDF...';
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const base64 = String(event.target.result).split(',')[1];
+      message.textContent = 'Uploading PDF...';
+      window.callApi('adminUploadMaterial', adminToken, {
+        title: title, description: description, fileName: file.name,
+        mimeType: file.type, base64: base64,
+        grade: document.getElementById('materialGrade').value
+      }).then(function(result) {
+        button.disabled = false; button.textContent = 'Upload PDF';
+        message.textContent = result.message || 'Upload completed.';
+        if (result.success) {
+          document.getElementById('materialTitle').value = '';
+          document.getElementById('materialDescription').value = '';
+          fileInput.value = '';
+          document.getElementById('materialGrade').value = '';
+          loadContent('materials');
+        }
+      }).catch(function(error) {
+        button.disabled = false; button.textContent = 'Upload PDF';
+        message.textContent = error.message || 'Upload failed.';
+      });
+    };
+    reader.onerror = function() {
+      button.disabled = false; button.textContent = 'Upload PDF';
+      message.textContent = 'Unable to read this file.';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function editMaterial(item) {
+    const newTitle = prompt('Edit material title:', item.title || '');
+    if (newTitle === null) return;
+    const newDescription = prompt('Edit material description:', item.description || '');
+    if (newDescription === null) return;
+    const newGrade = prompt('Assign grade (Grade 6 to Grade 13 or ALL):', item.grade || 'ALL');
+    if (newGrade === null) return;
+    try {
+      const result = await window.callApi('adminUpdateMaterialDetails', adminToken, item.id, newTitle, newDescription, newGrade);
+      alert(result.message || 'Material updated.');
+      if (result.success) loadContent('materials');
+    } catch (error) { alert(error.message || 'Unable to update material.'); }
+  }
+
+  async function deleteContent(type, id) {
+    if (!confirm('Are you sure you want to delete this content?')) return;
+    try {
+      const result = await window.callApi('adminDeleteContent', adminToken, type, id);
+      alert(result.message || 'Deleted.');
+      if (result.success) loadContent(type);
+    } catch (error) { alert(error.message || 'Delete failed.'); }
+  }
+
+  async function saveClassDetails() {
+    const title = document.getElementById('classDetailsTitle').value.trim();
+    const description = document.getElementById('classDetailsDescription').value.trim();
+    const link = document.getElementById('classDetailsLink').value.trim();
+    const grade = document.getElementById('classDetailsGrade').value;
+    const message = document.getElementById('classDetailsMessage');
+    if (!title || !grade) { message.textContent = 'Please enter a title and select a grade.'; return; }
+    if (link && !/^https:\/\/[^\s]+$/i.test(link)) { message.textContent = 'Please enter a valid HTTPS link.'; return; }
+    message.textContent = 'Saving...';
+    try {
+      const result = await window.callApi('adminSaveClassDetails', adminToken, {
+        id: editingClassDetails, title: title, description: description, link: link, grade: grade
+      });
+      message.textContent = result.message || 'Saved.';
+      if (result.success) { resetClassDetailsForm(); loadContent('classDetails'); }
+    } catch (error) { message.textContent = error.message || 'Unable to save class details.'; }
+  }
+
+  function editClassDetails(item) {
+    editingClassDetails = item.id;
+    document.getElementById('classDetailsTitle').value = item.title || '';
+    document.getElementById('classDetailsDescription').value = item.description || '';
+    document.getElementById('classDetailsLink').value = item.link || '';
+    document.getElementById('classDetailsGrade').value = item.grade || '';
+    document.getElementById('classDetailsFormTitle').textContent = 'Edit Class Details';
+    document.getElementById('classDetailsMessage').textContent = 'Editing selected class details.';
+    document.getElementById('classDetailsTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function resetClassDetailsForm() {
+    editingClassDetails = '';
+    document.getElementById('classDetailsTitle').value = '';
+    document.getElementById('classDetailsDescription').value = '';
+    document.getElementById('classDetailsLink').value = '';
+    document.getElementById('classDetailsGrade').value = '';
+    document.getElementById('classDetailsFormTitle').textContent = 'Add New Class Details';
+    document.getElementById('classDetailsMessage').textContent = '';
+  }
+
+  function escapeHTML(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function(char) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[char];
+    });
+  }
+
+  async function logoutAdmin() {
+    if (!confirm('Are you sure you want to logout?')) return;
+    const token = adminToken;
+    adminToken = '';
+    sessionStorage.removeItem('easyMathsAdminToken');
+    document.getElementById('adminPanel').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('adminUsername').value = '';
+    document.getElementById('adminPassword').value = '';
+    document.getElementById('loginMessage').textContent = '';
+    try { await window.callApi('adminLogout', token); } catch (e) {}
+  }
+
+  async function deleteStudent(userId) {
+    if (!confirm('Are you sure you want to permanently delete this student?\n\nThis action cannot be undone.')) return;
+    try {
+      const result = await window.callApi('adminDeleteStudent', adminToken, userId);
+      alert(result.message || 'Operation completed.');
+      if (result.success) loadStudents();
+    } catch (error) { alert(error.message || 'Unable to delete student.'); }
+  }
+
+  function openPasswordModal(userId) {
+    selectedStudentId = userId;
+    document.getElementById('newStudentPassword').value = '';
+    document.getElementById('confirmStudentPassword').value = '';
+    document.getElementById('passwordMessage').textContent = '';
+    document.getElementById('passwordModal').style.display = 'flex';
+  }
+
+  function closePasswordModal() {
+    document.getElementById('passwordModal').style.display = 'none';
+    document.getElementById('newStudentPassword').value = '';
+    document.getElementById('confirmStudentPassword').value = '';
+    document.getElementById('passwordMessage').textContent = '';
+    selectedStudentId = '';
+  }
+
+  async function saveStudentPassword() {
+    const newPassword = document.getElementById('newStudentPassword').value;
+    const confirmPassword = document.getElementById('confirmStudentPassword').value;
+    const message = document.getElementById('passwordMessage');
+    const button = document.getElementById('changePasswordButton');
+    if (!selectedStudentId) { message.textContent = 'Please select a student.'; return; }
+    if (newPassword.length < 6) { message.textContent = 'Password must contain at least 6 characters.'; return; }
+    if (newPassword !== confirmPassword) { message.textContent = 'Passwords do not match.'; return; }
+    button.disabled = true; button.textContent = 'UPDATING...'; message.textContent = 'Updating password...';
+    try {
+      const result = await window.callApi('adminChangeStudentPassword', adminToken, selectedStudentId, newPassword);
+      button.disabled = false; button.textContent = 'Change Password';
+      if (result && result.success) { alert(result.message || 'Password changed successfully.'); closePasswordModal(); }
+      else message.textContent = (result && result.message) || 'Unable to change password.';
+    } catch (error) {
+      button.disabled = false; button.textContent = 'Change Password';
+      message.textContent = error.message || 'Password update failed.';
+    }
+  }
+
+  window.onload = checkSavedSession;
+</script>
+</body>
+</html>

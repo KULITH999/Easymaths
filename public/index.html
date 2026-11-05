@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EASY MATHS | Navidu Liyanage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="/config.js"></script>
+
+<style>
+:root { --gold: #e7bd58; --gold-light: #ffe6a0; --black: #080808; --muted: #aaa39a; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--black); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 35%, rgba(191,143,40,.10), transparent 55%), radial-gradient(ellipse at 90% 90%, rgba(191,143,40,.06), transparent 40%); z-index: -1; }
+
+nav { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 8%; border-bottom: 1px solid rgba(231,189,88,.17); background: rgba(8,8,8,.88); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 100; }
+.logo { color: var(--gold); font-size: 25px; font-weight: 900; letter-spacing: 2px; text-shadow: 0 0 15px rgba(231,189,88,.35); }
+.logo span { color: white; }
+.nav-links { display: flex; gap: 35px; align-items: center; }
+.nav-links a { color: #ddd; text-decoration: none; font-size: 13px; transition: .3s; }
+.nav-links a:hover { color: var(--gold); }
+.nav-btn { padding: 12px 23px; border: 1px solid var(--gold); border-radius: 5px; color: var(--gold) !important; }
+
+.hero { min-height: 720px; padding: 100px 8% 90px; display: flex; align-items: center; justify-content: space-between; gap: 60px; position: relative; }
+.hero-content { max-width: 690px; animation: fadeUp 1s ease both; }
+.tag { display: inline-block; border: 1px solid rgba(231,189,88,.45); color: var(--gold); padding: 10px 17px; border-radius: 30px; font-size: 11px; letter-spacing: 3px; margin-bottom: 30px; background: rgba(231,189,88,.05); }
+.hero h1 { font-size: clamp(48px, 7vw, 83px); line-height: 1.08; font-weight: 900; letter-spacing: -3px; }
+.hero h1 span { display: block; font-family: 'Playfair Display', serif; color: var(--gold); text-shadow: 0 0 25px rgba(231,189,88,.30); }
+.hero p { margin-top: 27px; color: var(--muted); font-size: 15px; line-height: 2; max-width: 510px; }
+.teacher-name { margin-top: 32px; font-size: 13px; letter-spacing: 4px; color: var(--gold-light); }
+.teacher-name strong { display: block; margin-top: 10px; font-size: 22px; letter-spacing: 2px; color: white; }
+.buttons { display: flex; gap: 15px; margin-top: 35px; flex-wrap: wrap; }
+.btn { padding: 16px 27px; border-radius: 5px; text-decoration: none; font-size: 13px; font-weight: 800; letter-spacing: 1px; transition: .3s; }
+.btn-primary { color: #090909; background: linear-gradient(120deg,#a97b22,#ffe39b,#c49331); box-shadow: 0 0 22px rgba(231,189,88,.18); }
+.btn-primary:hover { transform: translateY(-4px); box-shadow: 0 0 35px rgba(231,189,88,.4); }
+.btn-outline { color: var(--gold); border: 1px solid var(--gold); }
+.btn-outline:hover { background: rgba(231,189,88,.1); }
+
+.photo-area { width: 340px; height: 440px; flex-shrink: 0; position: relative; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(231,189,88,.38); border-radius: 180px 180px 15px 15px; background: #fff; box-shadow: 0 0 45px rgba(231,189,88,.09), inset 0 0 40px rgba(231,189,88,.04); animation: float 5s ease-in-out infinite; }
+.photo-area::before { content: ""; position: absolute; inset: 12px; border: 1px solid rgba(231,189,88,.25); border-radius: 180px 180px 10px 10px; }
+.photo-placeholder { text-align: center; z-index: 1; }
+.photo-placeholder .initials { font-family: 'Playfair Display', serif; font-size: 90px; color: var(--gold); text-shadow: 0 0 30px rgba(231,189,88,.4); }
+.photo-placeholder p { color: #b8a77e; font-size: 10px; letter-spacing: 3px; margin-top: 10px; }
+.teacher-photo { width: 100%; height: 100%; object-fit: contain; position: absolute; inset: 0; border-radius: 180px 180px 15px 15px; z-index: 2; }
+
+.stats { display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid rgba(231,189,88,.2); border-bottom: 1px solid rgba(231,189,88,.2); padding: 35px 8%; background: rgba(255,255,255,.015); }
+.stat { text-align: center; padding: 10px; }
+.stat h2 { color: var(--gold); font-size: 25px; letter-spacing: 2px; }
+.stat p { color: #888; font-size: 11px; letter-spacing: 2px; margin-top: 9px; }
+
+.section { padding: 110px 8%; text-align: center; }
+.section-label { color: var(--gold); font-size: 11px; letter-spacing: 4px; }
+.section h2 { font-family: 'Playfair Display',serif; font-size: clamp(32px,5vw,48px); margin-top: 20px; }
+.section h2 span { color: var(--gold); }
+.section-desc { color: #999; font-size: 14px; line-height: 1.9; max-width: 600px; margin: 20px auto 0; }
+.course-card { max-width: 370px; margin: 50px auto 0; text-align: left; padding: 35px; border: 1px solid rgba(231,189,88,.24); background: linear-gradient(145deg,#17140d,#0b0b0b); border-radius: 12px; transition: .3s; }
+.course-card:hover { transform: translateY(-8px); border-color: var(--gold); box-shadow: 0 10px 35px rgba(231,189,88,.1); }
+.course-card .icon { font-size: 35px; }
+.course-card h3 { margin-top: 22px; color: var(--gold); font-size: 20px; }
+.course-card p { margin-top: 12px; color: #999; font-size: 13px; line-height: 1.8; }
+footer { padding: 35px 8%; text-align: center; border-top: 1px solid rgba(231,189,88,.2); color: #888; font-size: 12px; line-height: 2; }
+footer strong { color: var(--gold); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(35px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@media(max-width:850px) {
+  nav { padding: 0 5%; height: 75px; }
+  .nav-links { gap: 15px; }
+  .nav-links a { font-size: 11px; }
+  .hero { flex-direction: column; text-align: center; padding: 75px 6%; }
+  .hero-content { margin: auto; }
+  .hero p { margin-left: auto; margin-right: auto; }
+  .teacher-name { line-height: 1.7; }
+  .buttons { justify-content: center; }
+  .photo-area { width: 270px; height: 340px; }
+}
+@media(max-width:520px) {
+  .logo { font-size: 19px; }
+  .nav-links { gap: 12px; }
+  .nav-links a { font-size: 10px; }
+  .nav-btn { padding: 9px 10px; }
+  .hero h1 { letter-spacing: -2px; }
+  .stats { padding: 25px 3%; }
+  .stat h2 { font-size: 19px; }
+  .stat p { font-size: 9px; letter-spacing: 1px; }
+  .section { padding: 80px 6%; }
+}
+
+/* AUTH MODAL */
+.auth-overlay { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,.78); backdrop-filter: blur(10px); align-items: center; justify-content: center; padding: 20px; }
+.auth-overlay.active { display: flex; }
+.auth-box { width: min(470px, 100%); max-height: 92vh; overflow-y: auto; position: relative; padding: 34px; border: 1px solid rgba(231,189,88,.38); border-radius: 14px; background: linear-gradient(145deg,#17140d,#080808); box-shadow: 0 0 45px rgba(231,189,88,.14); animation: authIn .25s ease both; }
+.auth-close { position: absolute; top: 12px; right: 16px; border: 0; background: transparent; color: #aaa39a; font-size: 28px; cursor: pointer; line-height: 1; }
+.auth-close:hover { color: var(--gold); }
+.auth-title { color: white; font-family: 'Playfair Display',serif; font-size: 32px; text-align: center; }
+.auth-title span { color: var(--gold); }
+.auth-subtitle { color: #999; text-align: center; font-size: 12px; margin: 8px 0 25px; }
+.auth-form { display: flex; flex-direction: column; gap: 13px; }
+.auth-input, .auth-select { width: 100%; padding: 14px 15px; border: 1px solid rgba(231,189,88,.25); border-radius: 6px; outline: none; background: #0c0c0c; color: white; font-family: 'Inter',sans-serif; font-size: 13px; transition: .25s; }
+.auth-input:focus, .auth-select:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(231,189,88,.08); }
+.auth-select option { background: #0c0c0c; color: white; }
+.password-wrap { position: relative; width: 100%; }
+.password-wrap .auth-input { padding-right: 48px; }
+.password-toggle { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 0; background: transparent; color: #aaa39a; cursor: pointer; padding: 0; font-size: 16px; }
+.password-toggle:hover { color: var(--gold); }
+.auth-submit { width: 100%; margin-top: 5px; padding: 15px; border: 0; border-radius: 6px; cursor: pointer; color: #090909; background: linear-gradient(120deg,#a97b22,#ffe39b,#c49331); font-weight: 800; letter-spacing: 1px; transition: .3s; }
+.auth-submit:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(231,189,88,.25); }
+.auth-switch { margin-top: 18px; text-align: center; color: #888; font-size: 12px; }
+.auth-switch button { border: 0; background: transparent; color: var(--gold); cursor: pointer; font-weight: 700; }
+.auth-message { min-height: 18px; text-align: center; font-size: 12px; margin-top: 8px; color: var(--gold-light); }
+@keyframes authIn { from { opacity: 0; transform: translateY(15px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@media(max-width:520px) { .auth-box { padding: 28px 20px; } .auth-title { font-size: 27px; } }
+
+/* GRADE SELECTION */
+.grade-page { display:none; position:relative; isolation:isolate; overflow:hidden; min-height:100vh; background:#050505; color:#fff; padding:70px 20px; text-align:center; }
+.grade-page::before { content:""; position:absolute; z-index:0; inset:-22%; pointer-events:none; background: radial-gradient(ellipse at 14% 24%,rgba(255,190,55,.62) 0%,rgba(201,133,20,.22) 23%,transparent 48%), radial-gradient(ellipse at 82% 18%,rgba(255,220,135,.48) 0%,rgba(173,112,20,.18) 25%,transparent 49%), radial-gradient(ellipse at 76% 78%,rgba(224,157,38,.48) 0%,rgba(120,76,12,.18) 27%,transparent 51%), radial-gradient(ellipse at 20% 82%,rgba(255,205,95,.38) 0%,rgba(151,101,18,.16) 24%,transparent 48%); background-size:150% 150%; filter:blur(48px) saturate(1.18); opacity:.82; animation:learningGoldOrbs 18s ease-in-out infinite alternate; }
+.grade-page::after { content:""; position:absolute; z-index:0; inset:0; pointer-events:none; background: radial-gradient(ellipse at center,transparent 28%,rgba(0,0,0,.42) 100%), linear-gradient(135deg,rgba(0,0,0,.20),transparent 45%,rgba(0,0,0,.24)); }
+.grade-page.active { display:block; }
+.grade-page-inner { position:relative; z-index:1; max-width:900px; margin:0 auto; }
+.grade-page-label { color:#e7bd58; letter-spacing:3px; font-size:12px; font-weight:700; margin-bottom:14px; }
+.grade-page h1 { margin:0; font-family:'Playfair Display',serif; font-size:clamp(36px,6vw,64px); }
+.grade-page h1 span { color:#e7bd58; }
+.grade-page-subtitle { color:#aaa39a; margin:14px auto 40px; max-width:560px; line-height:1.7; }
+.grade-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.grade-button { position:relative; isolation:isolate; overflow:hidden; transform-style:preserve-3d; perspective:900px; border:0; background:transparent; color:#fff; padding:30px 20px; min-height:126px; border-radius:16px; cursor:pointer; font-size:17px; font-weight:800; letter-spacing:1.5px; transition:transform .45s cubic-bezier(.2,.8,.2,1),filter .3s ease,box-shadow .4s ease; box-shadow:0 8px 28px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08),inset 0 -5px 0 rgba(0,0,0,.28); -webkit-tap-highlight-color:transparent; }
+.grade-button::before { content:""; position:absolute; z-index:-2; inset:-100%; background:conic-gradient(from 0deg,transparent 0 24%,#8d6824 31%,#ffe6a0 38%,#b8872d 45%,transparent 53% 74%,#e7bd58 82%,transparent 90%); animation:gradeGlassSpin 5s linear infinite; }
+.grade-button::after { content:""; position:absolute; z-index:-1; inset:1.5px; border-radius:14.5px; background:linear-gradient(135deg,rgba(31,28,21,.96),rgba(8,8,8,.97) 58%,rgba(35,27,12,.94)); border:1px solid rgba(255,230,160,.10); box-shadow:inset 0 1px 0 rgba(255,230,160,.12),inset 0 -7px 14px rgba(0,0,0,.35),0 5px 0 rgba(110,79,24,.22); transform:translateZ(5px); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); transition:background .3s ease,border-color .3s ease; }
+.grade-button span { position:relative; display:block; color:#ffe6a0; font-size:34px; line-height:1.1; margin-bottom:10px; text-shadow:0 0 12px rgba(231,189,88,.45); transition:transform .3s ease,text-shadow .3s ease; }
+.grade-button:hover { transform:perspective(900px) rotateX(5deg) rotateY(-4deg) translateY(-9px) scale(1.035); filter:brightness(1.14); box-shadow:0 22px 42px rgba(0,0,0,.58),0 15px 38px rgba(231,189,88,.20),0 0 28px rgba(231,189,88,.16); }
+.grade-button:hover::after { background:linear-gradient(135deg,rgba(49,39,19,.97),rgba(10,10,10,.96) 58%,rgba(53,39,14,.96)); border-color:rgba(255,230,160,.42); box-shadow:inset 0 1px 0 rgba(255,230,160,.22),inset 0 -9px 18px rgba(0,0,0,.42),0 7px 0 rgba(150,108,35,.32); }
+.grade-button:hover span { transform:translate3d(0,-3px,18px) scale(1.04); text-shadow:0 0 18px rgba(255,230,160,.8); }
+@keyframes gradeGlassSpin { to { transform:rotate(360deg); } }
+.grade-logout { margin-top:35px; border:1px solid rgba(255,255,255,.18); background:transparent; color:#aaa39a; padding:12px 24px; border-radius:8px; cursor:pointer; }
+.grade-logout:hover { color:#fff; border-color:#e7bd58; }
+@media (max-width:700px) { .grade-grid { grid-template-columns:repeat(2,1fr); gap:15px; } .grade-button { padding:25px 14px; min-height:116px; } }
+@media (max-width:430px) { .grade-grid { grid-template-columns:1fr; } }
+@media (prefers-reduced-motion:reduce) { .grade-page::before { animation:none; } .grade-button::before { animation:none; } .grade-button,.grade-button span,.grade-button::after { transition:none; } }
+@keyframes learningGoldOrbs { 0% { transform:translate3d(-3%,-2%,0) scale(.96); } 50% { transform:translate3d(3%,2%,0) scale(1.04); } 100% { transform:translate3d(-1%,4%,0) scale(1.02); } }
+
+/* LEARNING PAGE */
+.learning-page { display:none; position:relative; isolation:isolate; overflow:hidden; min-height:100vh; box-sizing:border-box; padding:64px 20px; text-align:center; color:#fff; background:#050505; }
+.learning-page::before { content:""; position:absolute; z-index:0; inset:-22%; pointer-events:none; background: radial-gradient(ellipse at 14% 24%,rgba(255,190,55,.62) 0%,rgba(201,133,20,.22) 23%,transparent 48%), radial-gradient(ellipse at 82% 18%,rgba(255,220,135,.48) 0%,rgba(173,112,20,.18) 25%,transparent 49%), radial-gradient(ellipse at 76% 78%,rgba(224,157,38,.48) 0%,rgba(120,76,12,.18) 27%,transparent 51%), radial-gradient(ellipse at 20% 82%,rgba(255,205,95,.38) 0%,rgba(151,101,18,.16) 24%,transparent 48%); background-size:150% 150%; filter:blur(48px) saturate(1.18); opacity:.82; animation:learningGoldOrbs 18s ease-in-out infinite alternate; }
+.learning-page::after { content:""; position:absolute; z-index:0; inset:0; pointer-events:none; background: radial-gradient(ellipse at center,transparent 28%,rgba(0,0,0,.42) 100%), linear-gradient(135deg,rgba(0,0,0,.20),transparent 45%,rgba(0,0,0,.24)); }
+.learning-page.active { display:block; }
+.learning-page-inner { position:relative; z-index:1; width:min(900px,100%); margin:0 auto; }
+.learning-page-label { color:#e7bd58; letter-spacing:3px; font-size:12px; font-weight:700; margin-bottom:14px; }
+.learning-page h1 { margin:0; font-family:'Playfair Display',serif; font-size:clamp(34px,6vw,58px); }
+.learning-page h1 span { color:#e7bd58; }
+.learning-page-subtitle { color:#aaa39a; margin:13px auto 34px; max-width:560px; line-height:1.7; }
+.learning-frame { position:relative; isolation:isolate; overflow:hidden; padding:3px; border-radius:25px; background:#17130b; box-shadow:0 0 22px rgba(231,189,88,.13),0 18px 48px rgba(0,0,0,.42); }
+.learning-frame::before { content:""; position:absolute; z-index:-2; width:220%; height:500%; left:-60%; top:-200%; background:conic-gradient(from 0deg, transparent 0 20%,#8d6824 27%,#fff0bd 32%, #d6a743 38%,transparent 46% 68%, #ffe6a0 76%,#9a7028 82%,transparent 90%); animation:learningFrameSpin 5s linear infinite; }
+.learning-frame::after { content:""; position:absolute; z-index:-1; inset:3px; border-radius:22px; background:#0b0b0b; }
+@keyframes learningFrameSpin { to { transform:rotate(360deg); } }
+.learning-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; padding:18px; }
+.learning-card { min-height:155px; border:1px solid rgba(255,230,160,.18); border-radius:17px; padding:23px 14px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:11px; cursor:pointer; color:#ffe6a0; background:linear-gradient(145deg,#211c11,#090909 70%); box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 22px rgba(0,0,0,.3); transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease; font:inherit; -webkit-tap-highlight-color:transparent; }
+.learning-card:hover { transform:translateY(-5px); border-color:rgba(255,230,160,.65); box-shadow:0 0 24px rgba(231,189,88,.16),0 12px 26px rgba(0,0,0,.4); }
+.learning-card svg { width:35px; height:35px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 7px rgba(231,189,88,.35)); }
+.learning-card strong { color:#ffe6a0; font-size:15px; letter-spacing:1.1px; }
+.learning-card small { color:#aaa39a; font-size:11px; }
+.learning-back { margin-top:27px; border:1px solid rgba(231,189,88,.55); color:#ffe6a0; background:rgba(231,189,88,.07); border-radius:30px; padding:12px 23px; font-weight:700; letter-spacing:1px; cursor:pointer; }
+.learning-back:hover { background:rgba(231,189,88,.15); }
+@media(max-width:520px) { .learning-page { padding:48px 14px; } .learning-grid { gap:10px; padding:12px; } .learning-card { min-height:135px; padding:18px 8px; } .learning-card strong { font-size:12px; } .learning-card small { font-size:10px; } }
+
+/* PORTAL CONTENT */
+.portal-content-page { display:none; position:relative; isolation:isolate; overflow:hidden; min-height:100vh; padding:64px 20px; color:#fff; background:#050505; }
+.portal-content-page.active { display:block; }
+.portal-content-page::before { content:""; position:absolute; z-index:0; inset:-22%; pointer-events:none; background: radial-gradient(ellipse at 14% 24%,rgba(255,190,55,.52) 0%,rgba(201,133,20,.18) 23%,transparent 48%), radial-gradient(ellipse at 82% 18%,rgba(255,220,135,.40) 0%,rgba(173,112,20,.15) 25%,transparent 49%), radial-gradient(ellipse at 76% 78%,rgba(224,157,38,.38) 0%,rgba(120,76,12,.15) 27%,transparent 51%); background-size:150% 150%; filter:blur(48px) saturate(1.15); opacity:.8; animation:learningGoldOrbs 18s ease-in-out infinite alternate; }
+.portal-content-inner { position:relative; z-index:1; width:min(1000px,100%); margin:0 auto; }
+.portal-content-label { color:#e7bd58; letter-spacing:3px; font-size:11px; font-weight:800; text-align:center; }
+.portal-content-page h1 { margin:14px 0 10px; text-align:center; font-family:'Playfair Display',serif; font-size:clamp(34px,6vw,56px); }
+.portal-content-page h1 span { color:#e7bd58; }
+.portal-content-subtitle { color:#aaa39a; text-align:center; line-height:1.7; margin:0 auto 32px; }
+.portal-content-frame { position:relative; isolation:isolate; overflow:hidden; padding:3px; border-radius:22px; background:#17130b; box-shadow:0 0 22px rgba(231,189,88,.13),0 18px 48px rgba(0,0,0,.42); }
+.portal-content-frame::before { content:""; position:absolute; z-index:-2; width:220%; height:500%; left:-60%; top:-200%; background:conic-gradient(from 0deg,transparent 0 20%,#8d6824 27%,#fff0bd 32%,#d6a743 38%,transparent 46% 68%,#ffe6a0 76%,#9a7028 82%,transparent 90%); animation:learningFrameSpin 5s linear infinite; }
+.portal-content-list { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; padding:18px; border-radius:19px; background:#0b0b0b; min-height:160px; }
+.portal-item { border:1px solid rgba(255,230,160,.2); border-radius:14px; padding:22px; background:linear-gradient(145deg,#211c11,#090909 70%); box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 22px rgba(0,0,0,.3); }
+.portal-item h3 { color:#ffe6a0; font-size:17px; margin-bottom:10px; overflow-wrap:anywhere; }
+.portal-item p { color:#aaa39a; font-size:13px; line-height:1.7; white-space:pre-wrap; overflow-wrap:anywhere; }
+.portal-item small { display:block; color:#b89a58; margin-top:12px; font-size:11px; overflow-wrap:anywhere; }
+.portal-action { display:inline-block; margin-top:17px; border:1px solid #e7bd58; border-radius:7px; padding:11px 18px; background:linear-gradient(120deg,#a97b22,#ffe39b,#c49331); color:#090909; font-size:12px; font-weight:900; letter-spacing:.7px; cursor:pointer; }
+.portal-action:hover { filter:brightness(1.08); transform:translateY(-2px); }
+.portal-status { grid-column:1/-1; color:#aaa39a; text-align:center; padding:34px 12px; line-height:1.8; font-size:14px; }
+.portal-status.error { color:#ffd0a0; }
+.portal-back { display:block; margin:27px auto 0; border:1px solid rgba(231,189,88,.55); color:#ffe6a0; background:rgba(231,189,88,.07); border-radius:30px; padding:12px 23px; font-weight:700; letter-spacing:1px; cursor:pointer; }
+.portal-back:hover { background:rgba(231,189,88,.15); }
+@media(max-width:650px) { .portal-content-page { padding:48px 14px; } .portal-content-list { grid-template-columns:1fr; padding:12px; gap:12px; } .portal-item { padding:18px; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">EASY <span>MATHS</span></div>
+  <div class="nav-links">
+    <a href="#home">HOME</a>
+    <a href="#about">ABOUT</a>
+    <a href="#courses">COURSES</a>
+    <a href="https://wa.me/94774480341" class="nav-btn" target="_blank" rel="noopener noreferrer">CONTACT</a>
+  </div>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="tag">WELCOME TO EASY MATHS</div>
+    <h1>MASTER <span>MATHEMATICS</span> WITH CONFIDENCE.</h1>
+    <p>Discover a smarter way to learn Mathematics. Build your knowledge, improve your skills and achieve your academic goals with EASY MATHS.</p>
+    <div class="teacher-name">YOUR MATHEMATICS TEACHER<strong>NAVIDU LIYANAGE</strong></div>
+    <div class="buttons">
+      <a href="#" class="btn btn-primary" id="openLogin">Log IN ↗</a>
+      <a href="#" class="btn btn-outline" id="openSignup">Sign Up</a>
+    </div>
+  </div>
+  <div class="photo-area">
+    <div class="photo-placeholder">
+      <div class="initials">NL</div>
+      <p>NAVIDU LIYANAGE</p>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stat"><h2>LEARN</h2><p>BUILD KNOWLEDGE</p></div>
+  <div class="stat"><h2>GROW</h2><p>IMPROVE SKILLS</p></div>
+  <div class="stat"><h2>ACHIEVE</h2><p>REACH YOUR GOALS</p></div>
+</section>
+
+<section class="section" id="about">
+  <div class="section-label">ABOUT EASY MATHS</div>
+  <h2>LEARN WITH <span>CONFIDENCE.</span></h2>
+  <p class="section-desc">Welcome to EASY MATHS, a learning space designed to make Mathematics easier to understand. Learn step by step and build a strong foundation for your future.</p>
+</section>
+
+<section class="section" id="courses">
+  <div class="section-label">OUR LEARNING PROGRAM</div>
+  <h2>EXPLORE OUR <span>COURSES</span></h2>
+  <p class="section-desc">Find the right learning path and take your Mathematics knowledge to the next level.</p>
+  <div class="course-card">
+    <div class="icon">✦</div>
+    <h3>MATHEMATICS</h3>
+    <p>Build your mathematical knowledge through clear explanations and step-by-step learning.</p>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="section-label">GET IN TOUCH</div>
+  <h2>LET'S START <span>LEARNING.</span></h2>
+  <p class="section-desc">Welcome to EASY MATHS. Your journey towards better Mathematics starts here.</p>
+  <div class="buttons" style="justify-content:center">
+    <a href="#home" class="btn btn-primary">BACK TO TOP ↑</a>
+  </div>
+</section>
+
+<footer>
+  <strong>EASY MATHS</strong><br>
+  MATHEMATICS EDUCATION | NAVIDU LIYANAGE<br>
+  © <span id="year"></span> EASY MATHS. ALL RIGHTS RESERVED.
+</footer>
+
+<section class="grade-page" id="gradePage">
+  <div class="grade-page-inner">
+    <div class="grade-page-label">EASY MATHS LEARNING PORTAL</div>
+    <h1>SELECT YOUR <span>GRADE</span></h1>
+    <p class="grade-page-subtitle">Choose your grade to continue your Mathematics learning journey.</p>
+    <div class="grade-grid">
+      <button class="grade-button" data-grade="6"><span>GRADE 06</span></button>
+      <button class="grade-button" data-grade="7"><span>GRADE 07</span></button>
+      <button class="grade-button" data-grade="8"><span>GRADE 08</span></button>
+      <button class="grade-button" data-grade="9"><span>GRADE 09</span></button>
+      <button class="grade-button" data-grade="10"><span>GRADE 10</span></button>
+      <button class="grade-button" data-grade="11"><span>GRADE 11</span></button>
+    </div>
+    <button class="grade-logout" id="gradeLogout">LOG OUT</button>
+  </div>
+</section>
+
+<section class="learning-page" id="learningPage">
+  <div class="learning-page-inner">
+    <div class="learning-page-label">EASY MATHS LEARNING PORTAL</div>
+    <h1 id="learningGradeTitle">GRADE <span>06</span></h1>
+    <p class="learning-page-subtitle">Choose what you want to learn today.</p>
+    <div class="learning-frame">
+      <div class="learning-grid">
+        <button class="learning-card" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/><path d="M7 2v3M17 2v3"/></svg>
+          <strong>LIVE CLASSES</strong><small>Join Online Classes</small>
+        </button>
+        <button class="learning-card" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/><path d="M8 7h8M8 11h8"/></svg>
+          <strong>STUDY MATERIALS</strong><small>Notes &amp; Tutes</small>
+        </button>
+        <button class="learning-card" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9h18M8 13h3M8 17h7"/></svg>
+          <strong>CLASS DETAILS</strong><small>Times &amp; Information</small>
+        </button>
+        <button class="learning-card" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m10 8 6 4-6 4z"/></svg>
+          <strong>VIDEO LESSONS</strong><small>Watch Recorded Lessons</small>
+        </button>
+      </div>
+    </div>
+    <button class="learning-back" id="backToGrades" type="button">← BACK TO GRADES</button>
+  </div>
+</section>
+
+<section class="portal-content-page" id="portalContentPage">
+  <div class="portal-content-inner">
+    <div class="portal-content-label">EASY MATHS STUDENT PORTAL</div>
+    <h1 id="portalContentTitle"> <span>LIVE CLASSES</span></h1>
+    <p class="portal-content-subtitle" id="portalContentSubtitle">Access your learning content.</p>
+    <div class="portal-content-frame">
+      <div class="portal-content-list" id="portalContentList">
+        <div class="portal-status">Loading content...</div>
+      </div>
+    </div>
+    <button class="portal-back" id="backToLearning" type="button">← BACK TO LEARNING MENU</button>
+  </div>
+</section>
+
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <button class="auth-close" id="authClose" aria-label="Close">&times;</button>
+    <div id="loginPanel">
+      <h2 class="auth-title">WELCOME TO <span>EASY MATHS</span></h2>
+      <p class="auth-subtitle">Login to continue your learning journey.</p>
+      <form class="auth-form" id="loginForm">
+        <input class="auth-input" id="loginIdentifier" type="text" placeholder="Email or WhatsApp Number" autocomplete="username" required>
+        <div class="password-wrap">
+          <input class="auth-input" id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" required>
+          <button class="password-toggle" type="button" data-target="loginPassword" aria-label="Show password" title="Show password">👁</button>
+        </div>
+        <button class="auth-submit" type="submit">LOG IN</button>
+        <div class="auth-message" id="loginMessage"></div>
+      </form>
+      <div class="auth-switch">Don't have an account? <button type="button" id="showSignup">Sign Up</button></div>
+    </div>
+    <div id="signupPanel" style="display:none;">
+      <h2 class="auth-title">CREATE <span>ACCOUNT</span></h2>
+      <p class="auth-subtitle">Join EASY MATHS and start learning.</p>
+      <form class="auth-form" id="signupForm">
+        <input class="auth-input" id="signupName" type="text" placeholder="Name" autocomplete="name" required>
+        <input class="auth-input" id="signupEmail" type="email" placeholder="Email" autocomplete="email" required>
+        <input class="auth-input" id="signupWhatsapp" type="tel" placeholder="WhatsApp Number" autocomplete="tel" required>
+        <select class="auth-select" id="signupDistrict" required>
+          <option value="" selected disabled>Select District</option>
+          <option>Ampara</option><option>Anuradhapura</option><option>Badulla</option><option>Batticaloa</option><option>Colombo</option><option>Galle</option><option>Gampaha</option><option>Hambantota</option><option>Jaffna</option><option>Kalutara</option><option>Kandy</option><option>Kegalle</option><option>Kilinochchi</option><option>Kurunegala</option><option>Mannar</option><option>Matale</option><option>Matara</option><option>Monaragala</option><option>Mullaitivu</option><option>Nuwara Eliya</option><option>Polonnaruwa</option><option>Puttalam</option><option>Ratnapura</option><option>Trincomalee</option><option>Vavuniya</option>
+        </select>
+        <select class="auth-select" id="signupGrade" required>
+          <option value="" selected disabled>Select Your Grade</option>
+          <option value="Grade 6">Grade 6</option><option value="Grade 7">Grade 7</option><option value="Grade 8">Grade 8</option><option value="Grade 9">Grade 9</option><option value="Grade 10">Grade 10</option><option value="Grade 11">Grade 11</option>
+        </select>
+        <input class="auth-input" id="signupContact" type="tel" placeholder="Contact Number" autocomplete="tel" required>
+        <div class="password-wrap">
+          <input class="auth-input" id="signupPassword" type="password" placeholder="Password" autocomplete="new-password" required>
+          <button class="password-toggle" type="button" data-target="signupPassword" aria-label="Show password" title="Show password">👁</button>
+        </div>
+        <div class="password-wrap">
+          <input class="auth-input" id="signupConfirmPassword" type="password" placeholder="Confirm Password" autocomplete="new-password" required>
+          <button class="password-toggle" type="button" data-target="signupConfirmPassword" aria-label="Show password" title="Show password">👁</button>
+        </div>
+        <button class="auth-submit" type="submit">CREATE ACCOUNT</button>
+        <div class="auth-message" id="signupMessage"></div>
+      </form>
+      <div class="auth-switch">Already have an account? <button type="button" id="showLogin">Log In</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+
+(function () {
+  const overlay = document.getElementById('authOverlay');
+  const loginPanel = document.getElementById('loginPanel');
+  const signupPanel = document.getElementById('signupPanel');
+  const loginMessage = document.getElementById('loginMessage');
+  const signupMessage = document.getElementById('signupMessage');
+  const gradePage = document.getElementById('gradePage');
+  const learningPage = document.getElementById('learningPage');
+  const portalContentPage = document.getElementById('portalContentPage');
+  const portalContentList = document.getElementById('portalContentList');
+  const portalContentTitle = document.getElementById('portalContentTitle');
+  const portalContentSubtitle = document.getElementById('portalContentSubtitle');
+  let currentUserGrade = '';
+
+  function openAuth(type) {
+    overlay.classList.add('active');
+    if (type === 'signup') showSignup();
+    else showLogin();
+    document.body.style.overflow = 'hidden';
+  }
+  function closeAuth() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    loginMessage.textContent = '';
+    signupMessage.textContent = '';
+  }
+  function showLogin() {
+    loginPanel.style.display = 'block';
+    signupPanel.style.display = 'none';
+    loginMessage.textContent = '';
+  }
+  function showSignup() {
+    loginPanel.style.display = 'none';
+    signupPanel.style.display = 'block';
+    signupMessage.textContent = '';
+  }
+  function showGradePage() {
+    closeAuth();
+    if (!currentUserGrade) { openAuth('login'); return; }
+    showLearningPage(currentUserGrade.replace('Grade ', ''));
+  }
+  function showLearningPage(grade) {
+    gradePage.classList.remove('active');
+    gradePage.style.display = 'none';
+    portalContentPage.classList.remove('active');
+    portalContentPage.style.display = 'none';
+    document.querySelectorAll('body > section, body > header, body > nav, body > footer').forEach(function(el) {
+      if (el !== learningPage) el.style.display = 'none';
+    });
+    document.getElementById('learningGradeTitle').innerHTML =
+      'GRADE <span>' + String(grade).padStart(2, '0') + '</span>';
+    learningPage.style.display = '';
+    learningPage.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  function showMainPage() {
+    gradePage.classList.remove('active');
+    learningPage.classList.remove('active');
+    portalContentPage.classList.remove('active');
+    portalContentPage.style.display = 'none';
+    gradePage.style.display = '';
+    learningPage.style.display = 'none';
+    document.querySelectorAll('body > section, body > header, body > nav, body > footer').forEach(function(el) {
+      if (el !== learningPage) el.style.display = '';
+    });
+  }
+
+  document.getElementById('openLogin').addEventListener('click', function(e) { e.preventDefault(); openAuth('login'); });
+  document.getElementById('openSignup').addEventListener('click', function(e) { e.preventDefault(); openAuth('signup'); });
+  document.getElementById('authClose').addEventListener('click', closeAuth);
+  document.getElementById('showSignup').addEventListener('click', showSignup);
+  document.getElementById('showLogin').addEventListener('click', showLogin);
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) closeAuth(); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) closeAuth();
+  });
+
+  document.querySelectorAll('.password-toggle').forEach(function(button) {
+    button.addEventListener('click', function() {
+      const input = document.getElementById(this.dataset.target);
+      if (!input) return;
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      this.textContent = isPassword ? '🙈' : '👁';
+      this.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+    });
+  });
+
+  // SIGNUP
+  document.getElementById('signupForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const data = {
+      name: document.getElementById('signupName').value,
+      email: document.getElementById('signupEmail').value,
+      whatsapp: document.getElementById('signupWhatsapp').value,
+      district: document.getElementById('signupDistrict').value,
+      grade: document.getElementById('signupGrade').value,
+      contact: document.getElementById('signupContact').value,
+      password: document.getElementById('signupPassword').value,
+      confirmPassword: document.getElementById('signupConfirmPassword').value
+    };
+    signupMessage.textContent = 'Creating account...';
+    try {
+      const result = await window.callApi('signUpUser', data);
+      signupMessage.textContent = result.message || '';
+      if (result.success) {
+        document.getElementById('signupForm').reset();
+        setTimeout(function() { showLogin(); }, 900);
+      }
+    } catch (error) {
+      signupMessage.textContent = error.message || 'Something went wrong.';
+    }
+  });
+
+  // LOGIN
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const identifier = document.getElementById('loginIdentifier').value;
+    const password = document.getElementById('loginPassword').value;
+    loginMessage.textContent = 'Logging in...';
+    try {
+      const result = await window.callApi('loginUser', identifier, password);
+      if (result.success) {
+        if (result.token) localStorage.setItem('easyMathsSession', result.token);
+        currentUserGrade = result.user && result.user.grade ? result.user.grade : '';
+        if (!currentUserGrade) {
+          loginMessage.textContent = 'Your account has no grade assigned. Please contact the admin.';
+          return;
+        }
+        showGradePage();
+      } else {
+        loginMessage.textContent = result.message || 'Login failed.';
+      }
+    } catch (error) {
+      loginMessage.textContent = error.message || 'Something went wrong.';
+    }
+  });
+
+  document.querySelectorAll('.grade-button').forEach(function(button) {
+    button.addEventListener('click', function() {
+      const grade = button.getAttribute('data-grade');
+      if (currentUserGrade && String(grade) !== currentUserGrade.replace('Grade ', '')) return;
+      showLearningPage(grade);
+    });
+  });
+
+  document.getElementById('backToGrades').addEventListener('click', function() {
+    learningPage.classList.remove('active');
+    learningPage.style.display = 'none';
+    gradePage.style.display = '';
+    gradePage.classList.add('active');
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById('gradeLogout').addEventListener('click', async function() {
+    const token = localStorage.getItem('easyMathsSession');
+    if (token) { try { await window.callApi('logoutUser', token); } catch(e) {} }
+    localStorage.removeItem('easyMathsSession');
+    currentUserGrade = '';
+    showMainPage();
+  });
+
+  const contentPageNames = {
+    live: { title: 'LIVE <span>CLASSES</span>', subtitle: 'Join your scheduled online Mathematics classes.' },
+    materials: { title: 'STUDY <span>MATERIALS</span>', subtitle: 'Download PDFs and study notes shared by your teacher.' },
+    videos: { title: 'VIDEO <span>LESSONS</span>', subtitle: 'Watch recorded Mathematics lessons.' },
+    classDetails: { title: 'CLASS <span>DETAILS</span>', subtitle: 'View the class information shared for your grade.' }
+  };
+
+  function showContentStatus(message, isError) {
+    portalContentList.replaceChildren();
+    const status = document.createElement('div');
+    status.className = 'portal-status' + (isError ? ' error' : '');
+    status.textContent = message;
+    portalContentList.appendChild(status);
+  }
+
+  async function showPortalContent(type) {
+    const token = localStorage.getItem('easyMathsSession');
+    if (!token) { openAuth('login'); return; }
+    const pageInfo = contentPageNames[type];
+    if (!pageInfo) return;
+
+    gradePage.classList.remove('active');
+    gradePage.style.display = 'none';
+    learningPage.classList.remove('active');
+    learningPage.style.display = 'none';
+    document.querySelectorAll('body > section, body > header, body > nav, body > footer').forEach(function(el) {
+      if (el !== portalContentPage) el.style.display = 'none';
+    });
+    portalContentPage.style.display = '';
+    portalContentPage.classList.add('active');
+    portalContentTitle.innerHTML = pageInfo.title;
+    portalContentSubtitle.textContent = pageInfo.subtitle;
+    showContentStatus('Checking your student access...', false);
+    window.scrollTo(0, 0);
+
+    let result;
+    try {
+      if (type === 'classDetails') result = await window.callApi('studentGetClassDetails', token);
+      else result = await window.callApi('studentGetContent', token, type);
+    } catch (err) {
+      showContentStatus(err.message || 'Unable to load content. Please try again.', true);
+      return;
+    }
+
+    if (!result || result.success === false || result.allowed === false) {
+      showContentStatus((result && result.message) || 'Your account does not currently have access. Please check your payment approval and account access status.', true);
+      return;
+    }
+
+    const items = result.items || [];
+    if (!items.length) {
+      showContentStatus(type === 'classDetails' ? 'No class details have been added for your grade yet.' : 'No content has been added yet. Please check again later.', false);
+      return;
+    }
+
+    portalContentList.replaceChildren();
+    items.forEach(function(item) {
+      const card = document.createElement('article');
+      card.className = 'portal-item';
+      const heading = document.createElement('h3');
+      heading.textContent = item.title || 'Untitled';
+      card.appendChild(heading);
+      if (item.description) {
+        const desc = document.createElement('p');
+        desc.textContent = item.description;
+        card.appendChild(desc);
+      }
+      if (type === 'materials') {
+        const fileLabel = document.createElement('small');
+        fileLabel.textContent = item.fileName ? 'PDF: ' + item.fileName : 'PDF Study Material';
+        card.appendChild(fileLabel);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'portal-action';
+        btn.textContent = 'DOWNLOAD PDF';
+        btn.addEventListener('click', function() { downloadStudentMaterial(item.id, item.fileName, btn); });
+        card.appendChild(btn);
+      } else {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'portal-action';
+        btn.textContent = type === 'live' ? 'JOIN LIVE CLASS' : (type === 'classDetails' ? 'OPEN CLASS LINK' : 'WATCH VIDEO');
+        btn.addEventListener('click', function() {
+          const link = String(item.link || '').trim();
+          if (!link) { showContentStatus('This class does not have a link yet. Please contact your teacher.', true); return; }
+          let parsed;
+          try { parsed = new URL(link); } catch (e) { showContentStatus('This class link is invalid.', true); return; }
+          if (parsed.protocol !== 'https:') { showContentStatus('This link must use HTTPS.', true); return; }
+          window.open(parsed.href, '_blank', 'noopener,noreferrer');
+        });
+        card.appendChild(btn);
+      }
+      portalContentList.appendChild(card);
+    });
+  }
+
+  async function downloadStudentMaterial(materialId, fileName, button) {
+    const token = localStorage.getItem('easyMathsSession');
+    if (!token) { openAuth('login'); return; }
+    if (!materialId) { showContentStatus('This PDF record is missing its ID.', true); return; }
+    button.disabled = true;
+    button.textContent = 'PREPARING DOWNLOAD...';
+    try {
+      const result = await window.callApi('studentDownloadMaterialById', token, materialId);
+      button.disabled = false;
+      button.textContent = 'DOWNLOAD PDF';
+      if (!result || result.success === false || !result.base64) {
+        showContentStatus((result && result.message) || 'Could not download this PDF.', true);
+        return;
+      }
+      const binary = atob(result.base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      const blob = new Blob([bytes], { type: result.mimeType || 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = result.fileName || fileName || 'study-material.pdf';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(function() { URL.revokeObjectURL(url); }, 1500);
+    } catch (error) {
+      button.disabled = false;
+      button.textContent = 'DOWNLOAD PDF';
+      showContentStatus(error.message || 'PDF download failed.', true);
+    }
+  }
+
+  document.querySelectorAll('.learning-card').forEach(function(button, index) {
+    button.addEventListener('click', function() {
+      if (index === 0) showPortalContent('live');
+      else if (index === 1) showPortalContent('materials');
+      else if (index === 2) showPortalContent('classDetails');
+      else if (index === 3) showPortalContent('videos');
+    });
+  });
+
+  document.getElementById('backToLearning').addEventListener('click', function() {
+    portalContentPage.classList.remove('active');
+    portalContentPage.style.display = 'none';
+    showLearningPage(document.getElementById('learningGradeTitle').textContent.replace(/\D/g, '') || '6');
+  });
+
+  // Restore session
+  const savedToken = localStorage.getItem('easyMathsSession');
+  if (savedToken) {
+    window.callApi('checkSession', savedToken).then(function(result) {
+      if (result && result.success) {
+        currentUserGrade = result.user && result.user.grade ? result.user.grade : '';
+        if (currentUserGrade) showGradePage();
+        else { localStorage.removeItem('easyMathsSession'); openAuth('login'); }
+      } else localStorage.removeItem('easyMathsSession');
+    }).catch(function() { localStorage.removeItem('easyMathsSession'); });
+  }
+})();
+</script>
+</body>
+</html>

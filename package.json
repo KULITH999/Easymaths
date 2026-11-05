@@ -1,0 +1,6 @@
+{
+  "name": "easymaths-vercel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EASY MATHS - Vercel frontend with Google Sheets backend via Apps Script API"
+}
