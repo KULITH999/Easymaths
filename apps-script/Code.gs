@@ -86,9 +86,13 @@ function getDatabaseSheet_() {
     ]]);
     sheet.setFrozenRows(1);
   }
-  const dbHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()[0];
+  let dbHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()[0];
   if (dbHeaders.indexOf('Grade') === -1) {
     sheet.getRange(1, sheet.getLastColumn() + 1).setValue('Grade');
+  }
+  dbHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()[0];
+  if (dbHeaders.indexOf('Address') === -1) {
+    sheet.getRange(1, sheet.getLastColumn() + 1).setValue('Address');
   }
   sheet.getRange('D:D').setNumberFormat('@');
   sheet.getRange('F:F').setNumberFormat('@');
@@ -100,13 +104,14 @@ function signUpUser(data) {
   const name = String(data.name || '').trim();
   const email = normalizeEmail_(data.email);
   const whatsapp = normalizePhone_(data.whatsapp);
+  const address = String(data.address || '').trim();
   const district = String(data.district || '').trim();
   const contact = normalizePhone_(data.contact);
   const password = String(data.password || '');
   const confirmPassword = String(data.confirmPassword || '');
   const grade = String(data.grade || '').trim();
 
-  if (!name || !email || !whatsapp || !district || !contact || !grade || !password || !confirmPassword) {
+  if (!name || !email || !whatsapp || !address || !district || !contact || !grade || !password || !confirmPassword) {
     return { success: false, message: 'Please fill all fields.' };
   }
   if (!/^Grade (6|7|8|9|10|11)$/.test(grade)) {
@@ -146,6 +151,7 @@ function signUpUser(data) {
     const passwordHash = hashPassword_(password, salt);
     const userHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()[0];
     const gradeColumn = userHeaders.indexOf('Grade');
+    const addressColumn = userHeaders.indexOf('Address');
     const newUserRow = new Array(sheet.getLastColumn()).fill('');
     newUserRow[0] = userId;
     newUserRow[1] = name;
@@ -155,7 +161,8 @@ function signUpUser(data) {
     newUserRow[5] = contact;
     newUserRow[6] = salt + ':' + passwordHash;
     newUserRow[7] = new Date();
-    newUserRow[gradeColumn] = grade;
+    if (gradeColumn >= 0) newUserRow[gradeColumn] = grade;
+    if (addressColumn >= 0) newUserRow[addressColumn] = address;
     sheet.appendRow(newUserRow);
     return { success: true, message: 'Account created successfully.' };
   } finally {
@@ -175,6 +182,7 @@ function loginUser(identifier, password) {
   const values = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).getValues();
   const userHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()[0];
   const gradeColumn = userHeaders.indexOf('Grade');
+  const addressColumn = userHeaders.indexOf('Address');
   const normalizedEmail = normalizeEmail_(identifier);
   const normalizedPhone = normalizePhoneForLogin_(identifier);
   for (let i = 0; i < values.length; i++) {
@@ -198,6 +206,7 @@ function loginUser(identifier, password) {
         whatsapp: String(row[3]),
         district: String(row[4]),
         contact: String(row[5]),
+        address: addressColumn >= 0 ? String(row[addressColumn] || '') : '',
         grade: gradeColumn >= 0 ? String(row[gradeColumn] || '') : ''
       };
       const token = Utilities.getUuid() + '-' + Utilities.getUuid();
@@ -296,11 +305,13 @@ function adminGetStudents(adminToken) {
   const headers = values[0];
   const paymentCol = headers.indexOf('Payment Status');
   const accessCol = headers.indexOf('Access Status');
+  const addressCol = headers.indexOf('Address');
   const students = values.slice(1).map(function (row, index) {
     return {
       rowNumber: index + 2,
       userId: row[0], name: row[1], email: row[2], whatsapp: row[3],
       district: row[4], contact: row[5],
+      address: addressCol >= 0 ? (row[addressCol] || '') : '',
       grade: row[headers.indexOf('Grade')] || '',
       paymentStatus: row[paymentCol] || 'PENDING',
       accessStatus: row[accessCol] || 'LOCKED'
