@@ -136,7 +136,7 @@
         <h2>Student Management</h2>
         <button class="refresh-btn" onclick="loadStudents()">Refresh Students</button>
         <div class="table-wrap">
-          <table><thead><tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>District</th><th>Grade</th><th>Payment</th><th>Access</th><th>Actions</th></tr></thead><tbody id="studentTable"></tbody></table>
+          <table><thead><tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>Address</th><th>District</th><th>Grade</th><th>Payment</th><th>Access</th><th>Actions</th></tr></thead><tbody id="studentTable"></tbody></table>
         </div>
       </div>
     </div>
@@ -354,7 +354,7 @@
     studentTable.innerHTML = ''; paymentTable.innerHTML = ''; accessTable.innerHTML = '';
 
     if (!studentsData.length) {
-      studentTable.innerHTML = '<tr><td colspan="8" class="empty">No students found.</td></tr>';
+      studentTable.innerHTML = '<tr><td colspan="9" class="empty">No students found.</td></tr>';
       paymentTable.innerHTML = '<tr><td colspan="5" class="empty">No payment requests found.</td></tr>';
       accessTable.innerHTML = '<tr><td colspan="5" class="empty">No students found.</td></tr>';
       return;
@@ -362,12 +362,13 @@
 
     studentsData.forEach(function(s) {
       const name = escapeHTML(s.name), email = escapeHTML(s.email), whatsapp = escapeHTML(s.whatsapp);
+      const address = escapeHTML(s.address || '');
       const district = escapeHTML(s.district), grade = escapeHTML(s.grade || 'Not set');
       const safeUserId = escapeHTML(s.userId);
 
       studentTable.innerHTML += `
         <tr>
-          <td>${name}</td><td>${email}</td><td>${whatsapp}</td><td>${district}</td><td>${grade}</td>
+          <td>${name}</td><td>${email}</td><td>${whatsapp}</td><td>${address}</td><td>${district}</td><td>${grade}</td>
           <td>${statusLabel(s.paymentStatus)}</td><td>${statusLabel(s.accessStatus)}</td>
           <td><div class="student-actions">
             <button class="action-btn password-btn" data-action="password" data-user-id="${safeUserId}">Change Password</button>
