@@ -339,6 +339,7 @@ footer strong { color: var(--gold); }
         <input class="auth-input" id="signupName" type="text" placeholder="Name" autocomplete="name" required>
         <input class="auth-input" id="signupEmail" type="email" placeholder="Email" autocomplete="email" required>
         <input class="auth-input" id="signupWhatsapp" type="tel" placeholder="WhatsApp Number" autocomplete="tel" required>
+        <input class="auth-input" id="signupAddress" type="text" placeholder="Address" autocomplete="street-address" required>
         <select class="auth-select" id="signupDistrict" required>
           <option value="" selected disabled>Select District</option>
           <option>Ampara</option><option>Anuradhapura</option><option>Badulla</option><option>Batticaloa</option><option>Colombo</option><option>Galle</option><option>Gampaha</option><option>Hambantota</option><option>Jaffna</option><option>Kalutara</option><option>Kandy</option><option>Kegalle</option><option>Kilinochchi</option><option>Kurunegala</option><option>Mannar</option><option>Matale</option><option>Matara</option><option>Monaragala</option><option>Mullaitivu</option><option>Nuwara Eliya</option><option>Polonnaruwa</option><option>Puttalam</option><option>Ratnapura</option><option>Trincomalee</option><option>Vavuniya</option>
@@ -462,6 +463,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
       name: document.getElementById('signupName').value,
       email: document.getElementById('signupEmail').value,
       whatsapp: document.getElementById('signupWhatsapp').value,
+      address: document.getElementById('signupAddress').value,
       district: document.getElementById('signupDistrict').value,
       grade: document.getElementById('signupGrade').value,
       contact: document.getElementById('signupContact').value,
